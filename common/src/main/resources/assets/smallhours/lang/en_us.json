@@ -1,0 +1,13 @@
+{
+  "entity.smallhours.omen": "The Omen",
+  "entity.smallhours.understudy": "The Understudy",
+  "entity.smallhours.patient": "The Patient",
+  "item.smallhours.omen_spawn_egg": "Omen Spawn Egg",
+  "item.smallhours.understudy_spawn_egg": "Understudy Spawn Egg",
+  "item.smallhours.patient_spawn_egg": "Patient Spawn Egg",
+  "subtitles.smallhours.omen_sting": "Something sees you",
+  "subtitles.smallhours.understudy_shriek": "Understudy pounces",
+  "subtitles.smallhours.understudy_chitter": "Understudy chitters",
+  "subtitles.smallhours.patient_scream": "The Patient screams",
+  "subtitles.smallhours.whisper": "Whispers"
+}

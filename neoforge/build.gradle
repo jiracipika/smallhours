@@ -1,0 +1,44 @@
+plugins {
+    id 'net.neoforged.moddev'
+}
+
+version = project.mod_version
+group = project.mod_group
+
+base {
+    archivesName = "${project.mod_id}-neoforge-${project.minecraft_version}"
+}
+
+neoForge {
+    version = project.neoforge_version
+
+    runs {
+        server {
+            server()
+        }
+    }
+
+    mods {
+        "${project.mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+// Shared multiloader sources: common code compiles against Mojmap on both loaders.
+sourceSets.main.java.srcDirs += '../common/src/main/java'
+sourceSets.main.resources.srcDirs += '../common/src/main/resources'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    from('../LICENSE')
+}

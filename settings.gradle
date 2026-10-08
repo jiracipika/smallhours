@@ -1,0 +1,25 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'NeoForged'
+            url = 'https://maven.neoforged.net/releases'
+        }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    plugins {
+        // 1.21.1 is still obfuscated -> Loom 1.17+ requires the '-remap' plugin id
+        id 'net.fabricmc.fabric-loom-remap' version '1.17.21'
+        id 'net.neoforged.moddev' version '2.0.148'
+    }
+}
+
+// NOTE: no foojay toolchain resolver — 0.9.0 (latest) references JvmVendorSpec.IBM_SEMERU,
+// removed in Gradle 9.x, and it crashes configuration lazily. This build compiles with
+// options.release=21 on the host JDK, so no JDK provisioning is needed.
+rootProject.name = 'smallhours'
+include 'fabric', 'neoforge'

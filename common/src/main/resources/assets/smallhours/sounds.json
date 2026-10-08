@@ -1,0 +1,32 @@
+{
+  "omen_sting": {
+    "subtitle": "subtitles.smallhours.omen_sting",
+    "sounds": [
+      "smallhours:omen_sting"
+    ]
+  },
+  "understudy_shriek": {
+    "subtitle": "subtitles.smallhours.understudy_shriek",
+    "sounds": [
+      "smallhours:understudy_shriek"
+    ]
+  },
+  "understudy_chitter": {
+    "subtitle": "subtitles.smallhours.understudy_chitter",
+    "sounds": [
+      "smallhours:understudy_chitter"
+    ]
+  },
+  "patient_scream": {
+    "subtitle": "subtitles.smallhours.patient_scream",
+    "sounds": [
+      "smallhours:patient_scream"
+    ]
+  },
+  "whisper": {
+    "subtitle": "subtitles.smallhours.whisper",
+    "sounds": [
+      "smallhours:whisper"
+    ]
+  }
+}

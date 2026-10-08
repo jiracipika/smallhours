@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="smallhours"
+version="0.1.0"
+displayName="Small Hours"
+description='''Quiet dread for the small hours: The Omen watches, The Understudy rehearses, The Patient walks.'''
+authors="jiracipika"
+[[dependencies.smallhours]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.smallhours]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.22)"
+ordering="NONE"
+side="BOTH"
