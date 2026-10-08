@@ -1,14 +1,22 @@
 package dev.jiracipika.smallhours.dread;
 
+import java.util.List;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.level.LightLayer;
 
 import dev.jiracipika.smallhours.Tuning;
+import dev.jiracipika.smallhours.config.Config;
 import dev.jiracipika.smallhours.director.NightDirector;
 
 public final class Dread {
@@ -149,6 +157,39 @@ public final class Dread {
 
     public static void onSlept(ServerPlayer player) {
         add(player, "sleep", Tuning.SLEEP_RELIEF);
+    }
+
+    /**
+     * The cat ritual: a marked player who wakes up beside a tamed cat is forgiven.
+     * Same scar the death-out leaves (maxEver clamped to DEATH_MARKED_MAXEVER), plus
+     * a purr only they can hear.
+     */
+    public static boolean tryCatUnmark(ServerPlayer player) {
+        if (!Config.catRitualEnabled) {
+            return false;
+        }
+        DreadState.PlayerDread st = state(player);
+        if (st == null || st.maxEver < Tuning.DREAD_MAX) {
+            return false;
+        }
+        List<Cat> cats = player.serverLevel().getEntitiesOfClass(Cat.class,
+                player.getBoundingBox().inflate(Tuning.RITUAL_RADIUS), Cat::isTame);
+        if (cats.isEmpty()) {
+            return false;
+        }
+        st.maxEver = Math.min(st.maxEver, Tuning.DEATH_MARKED_MAXEVER);
+        st.marked = false;
+        st.lastDreadEvent = System.currentTimeMillis();
+        markDirty(player);
+        add(player, "ritual", Tuning.RITUAL_RELIEF);
+        playSecret(player, SoundEvents.CAT_PURR);
+        return true;
+    }
+
+    private static void playSecret(ServerPlayer player, SoundEvent sound) {
+        player.connection.send(new ClientboundSoundPacket(Holder.direct(sound), SoundSource.NEUTRAL,
+                (int) (player.getX() * 8.0D), (int) (player.getY() * 8.0D), (int) (player.getZ() * 8.0D),
+                0.6F, 1.0F, player.getRandom().nextLong()));
     }
 
     public static void onDeath(ServerPlayer player) {

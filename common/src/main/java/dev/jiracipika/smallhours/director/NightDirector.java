@@ -26,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 
 import dev.jiracipika.smallhours.SmallHours;
 import dev.jiracipika.smallhours.Tuning;
+import dev.jiracipika.smallhours.config.Config;
 import dev.jiracipika.smallhours.dread.Dread;
 import dev.jiracipika.smallhours.entity.OmenEntity;
 import dev.jiracipika.smallhours.entity.PatientEntity;
@@ -53,7 +54,7 @@ public final class NightDirector {
 
     public static void serverTick(MinecraftServer server) {
         int tick = server.getTickCount();
-        if (tick % Tuning.DIRECTOR_LOOP_TICKS != 0) {
+        if (tick % Tuning.DIRECTOR_LOOP_TICKS != 0 || !Config.enabled) {
             return;
         }
         List<ServerPlayer> players = server.overworld().players();
@@ -219,7 +220,8 @@ public final class NightDirector {
         boolean night = isNight(level);
 
         // OMEN
-        if (night && server.overworld().getDayTime() >= Tuning.FIRST_NIGHT_END_DAYTIME
+        if (Config.omenEnabled && night
+                && (!Config.skipFirstNight || server.overworld().getDayTime() >= Tuning.FIRST_NIGHT_END_DAYTIME)
                 && level.getEntitiesOfClass(OmenEntity.class, p.getBoundingBox().inflate(Tuning.SPAWN_CLEAR_RADIUS)).isEmpty()) {
             long gap = Tuning.OMEN_GAP_MIN_MS
                     + (long) (rng.nextDouble() * (Tuning.OMEN_GAP_MAX_MS - Tuning.OMEN_GAP_MIN_MS));
@@ -245,7 +247,7 @@ public final class NightDirector {
         int tier = Dread.tier(p);
         boolean underground = p.getBlockY() < level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 p.getBlockX(), p.getBlockZ()) - Tuning.UNDERSTUDY_UNDERGROUND_DEPTH;
-        if (tier >= 1 && (underground || night)
+        if (Config.understudyEnabled && tier >= 1 && (underground || night)
                 && level.getEntitiesOfClass(UnderstudyEntity.class, p.getBoundingBox().inflate(Tuning.SPAWN_CLEAR_RADIUS)).isEmpty()) {
             long gap = Tuning.UNDERSTUDY_GAP_MIN_MS
                     + (long) (rng.nextDouble() * (Tuning.UNDERSTUDY_GAP_MAX_MS - Tuning.UNDERSTUDY_GAP_MIN_MS));
@@ -266,7 +268,7 @@ public final class NightDirector {
         }
 
         // PATIENT
-        if (Dread.get(p) >= Tuning.PATIENT_MIN_DREAD && night
+        if (Config.patientEnabled && Dread.get(p) >= Config.patientMinDread && night
                 && level.getEntitiesOfClass(PatientEntity.class, p.getBoundingBox().inflate(Tuning.PATIENT_CLEAR_RADIUS)).isEmpty()) {
             long gap = Tuning.PATIENT_GAP_MIN_MS
                     + (long) (rng.nextDouble() * (Tuning.PATIENT_GAP_MAX_MS - Tuning.PATIENT_GAP_MIN_MS));

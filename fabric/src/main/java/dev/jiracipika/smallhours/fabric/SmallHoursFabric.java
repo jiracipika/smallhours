@@ -1,21 +1,27 @@
 package dev.jiracipika.smallhours.fabric;
 
 import dev.jiracipika.smallhours.SmallHours;
+import dev.jiracipika.smallhours.config.Config;
 import dev.jiracipika.smallhours.director.NightDirector;
 import dev.jiracipika.smallhours.dread.Dread;
 import dev.jiracipika.smallhours.entity.OmenEntity;
 import dev.jiracipika.smallhours.entity.PatientEntity;
 import dev.jiracipika.smallhours.entity.UnderstudyEntity;
+import dev.jiracipika.smallhours.mimic.SoundMimicry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -25,6 +31,8 @@ import net.minecraft.world.item.SpawnEggItem;
 public class SmallHoursFabric implements ModInitializer {
     @Override
     public void onInitialize() {
+        Config.init(FabricLoader.getInstance().getConfigDir());
+
         EntityType<OmenEntity> omen = EntityType.Builder.of(OmenEntity::new, MobCategory.MONSTER)
                 .sized(0.6F, 2.0F).clientTrackingRange(10).build("omen");
         Registry.register(BuiltInRegistries.ENTITY_TYPE, SmallHours.id("omen"), omen);
@@ -72,7 +80,19 @@ public class SmallHoursFabric implements ModInitializer {
         EntitySleepEvents.STOP_SLEEPING.register((entity, pos) -> {
             if (entity instanceof ServerPlayer sp) {
                 Dread.onSlept(sp);
+                Dread.tryCatUnmark(sp);
             }
+        });
+        PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) -> {
+            if (!level.isClientSide() && player instanceof ServerPlayer sp) {
+                SoundMimicry.recordBreak(sp, state);
+            }
+        });
+        UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+            if (!level.isClientSide() && player instanceof ServerPlayer sp) {
+                SoundMimicry.recordUse(sp, level.getBlockState(hit.getBlockPos()), player.getItemInHand(hand));
+            }
+            return InteractionResult.PASS;
         });
 
         SmallHours.LOG.info("Small Hours (fabric) initialized");

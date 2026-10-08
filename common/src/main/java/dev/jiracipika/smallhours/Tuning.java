@@ -266,6 +266,15 @@ public final class Tuning {
     public static final double PATIENT_SPAWN_MAX_DOT = 0.55D;
 
     // ------------------------------------------------------------------
+    // v0.2 — mimicry + cat ritual
+    // ------------------------------------------------------------------
+    public static final int MIMICRY_WINDOW_TICKS = 6000;
+    public static final int MIMICRY_MAX_PER_PLAYER = 8;
+    public static final float MIMICRY_MIMIC_CHANCE = 0.66F;
+    public static final double RITUAL_RADIUS = 8.0D;
+    public static final int RITUAL_RELIEF = -10;
+
+    // ------------------------------------------------------------------
     // Client rendering
     // ------------------------------------------------------------------
     public static final float CLIENT_OMEN_SCALE = 1.12F;

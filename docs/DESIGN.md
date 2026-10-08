@@ -91,6 +91,12 @@ your view cone*): the sound source never resolves (no chest, no door); chased so
 replay from where you're NOT looking; in multiplayer **its audio is private** — "did you hear
 that?" "No." = fake.
 
+**Mimicry (v0.2):** a per-player ring buffer records the sounds you personally triggered in
+the last five minutes — blocks you broke or placed, doors you opened, chests you closed. When
+it lures you it now prefers *that* repertoire: the chest YOU closed, the door YOU opened,
+replayed at pitch 1.0 from a place where nothing is. You know that sound. You made it.
+(config: `mimicry`; falls back to the generic repertoire when your buffer is empty.)
+
 **Dread:** pounce +8, evaded +5, caught +3, failed lure +2, kill **−12** + 3-night suppression.
 One clean encounter ≈ +8; a pounce night ≈ +21; killing caps the bleed.
 
@@ -180,7 +186,9 @@ It remembers.
 **MARKED (100):** the Omen gets +1 sighting budget and a 24-block "invitation" sighting; the
 Understudy prefers you and pounces sooner; the Patient counts you as a valid hunt target, wins
 ties, and escalates to Phase 3. In-fiction tells: your cat hisses at you. You are never shown
-the number. Unmark: die (the cheap, ugly out) — or the cat-and-bed ritual (roadmap).
+the number. Unmark: die (the cheap, ugly out) — or the cat-and-bed ritual: wake up beside a
+tamed cat within 8 blocks and the mark lifts (same 85-scar the death-out leaves, −10 dread,
+and a purr only you hear) (v0.2; config: `cat_ritual`).
 
 **Multiplayer:** meters are strictly per-UUID. Entities target the highest-dread player in
 range (ties → nearest). Witness rule: seeing something together earns the witness half credit —
@@ -213,7 +221,13 @@ caps, decay, floors, marked); the ambient director (footsteps, knocks, whispers,
 the spawn director; private multiplayer audio; spawn eggs; custom skins + 5 synthesized sounds;
 both loaders build from one shared source tree.
 
-**Roadmap:** Understudy replays *your* actions (it heard you open that chest); door-creak
-ambient event; Patient LURK phase + mid-night acceleration ramp + closing-step relocation;
-eyes-open skin swap for Phase 3; cat-and-bed unmark ritual; "It Saw You First" advancement;
-config file (all tuning currently in `Tuning.java`); death message "X stopped running."
+**v0.2 (shipped):** `config/smallhours.json` (master switch, per-entity spawn gates,
+first-night skip, Patient dread floor, mimicry + ritual toggles); Understudy mimicry — its
+lures now prefer sounds the target player actually triggered in the last 5 minutes; the
+cat-and-bed unmark ritual (wake beside a tamed cat → mark lifted). Also: neoforge.mods.toml
+version is now templated from gradle.properties, and the NeoForge dev server moved to port
+25699 so both dev servers can run side by side.
+
+**Roadmap:** door-creak ambient event; Patient LURK phase + mid-night acceleration ramp +
+closing-step relocation; eyes-open skin swap for Phase 3; "It Saw You First" advancement;
+death message "X stopped running."

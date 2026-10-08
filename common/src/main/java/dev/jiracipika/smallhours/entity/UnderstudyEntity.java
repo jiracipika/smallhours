@@ -26,8 +26,10 @@ import net.minecraft.world.phys.Vec3;
 
 import dev.jiracipika.smallhours.SmallHours;
 import dev.jiracipika.smallhours.Tuning;
+import dev.jiracipika.smallhours.config.Config;
 import dev.jiracipika.smallhours.director.NightDirector;
 import dev.jiracipika.smallhours.dread.Dread;
+import dev.jiracipika.smallhours.mimic.SoundMimicry;
 
 public class UnderstudyEntity extends Monster {
     private static final List<Holder<SoundEvent>> LURE_SOUNDS = List.of(
@@ -195,7 +197,12 @@ public class UnderstudyEntity extends Monster {
             }
             if (u.tickCount >= u.nextLureAt) {
                 RandomSource rng = u.random;
-                Holder<SoundEvent> sound = LURE_SOUNDS.get(rng.nextInt(LURE_SOUNDS.size()));
+                // Prefer the target's own recent noises — the chest YOU closed, the door
+                // YOU opened — falling back to the generic repertoire.
+                List<SoundEvent> mimicPool = Config.mimicryEnabled ? SoundMimicry.pool(t) : List.of();
+                Holder<SoundEvent> sound = !mimicPool.isEmpty() && rng.nextFloat() < Tuning.MIMICRY_MIMIC_CHANCE
+                        ? Holder.direct(mimicPool.get(rng.nextInt(mimicPool.size())))
+                        : LURE_SOUNDS.get(rng.nextInt(LURE_SOUNDS.size()));
                 BlockPos at = u.blockPosition().offset(
                         rng.nextInt(Tuning.UNDERSTUDY_LURE_OFFSET * 2 + 1) - Tuning.UNDERSTUDY_LURE_OFFSET, 0,
                         rng.nextInt(Tuning.UNDERSTUDY_LURE_OFFSET * 2 + 1) - Tuning.UNDERSTUDY_LURE_OFFSET);

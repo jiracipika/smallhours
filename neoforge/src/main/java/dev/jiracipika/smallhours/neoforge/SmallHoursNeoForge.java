@@ -3,11 +3,13 @@ package dev.jiracipika.smallhours.neoforge;
 import java.util.function.Supplier;
 
 import dev.jiracipika.smallhours.SmallHours;
+import dev.jiracipika.smallhours.config.Config;
 import dev.jiracipika.smallhours.director.NightDirector;
 import dev.jiracipika.smallhours.dread.Dread;
 import dev.jiracipika.smallhours.entity.OmenEntity;
 import dev.jiracipika.smallhours.entity.PatientEntity;
 import dev.jiracipika.smallhours.entity.UnderstudyEntity;
+import dev.jiracipika.smallhours.mimic.SoundMimicry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -16,15 +18,19 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -60,6 +66,7 @@ public final class SmallHoursNeoForge {
     }
 
     public SmallHoursNeoForge(IEventBus modEventBus) {
+        Config.init(FMLPaths.CONFIGDIR.get());
         SmallHours.OMEN = OMEN::get;
         SmallHours.UNDERSTUDY = UNDERSTUDY::get;
         SmallHours.PATIENT = PATIENT::get;
@@ -113,6 +120,24 @@ public final class SmallHoursNeoForge {
         public static void onPlayerWakeUp(PlayerWakeUpEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
                 Dread.onSlept(player);
+                Dread.tryCatUnmark(player);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onBlockBreak(BlockEvent.BreakEvent event) {
+            if (event.getLevel() instanceof Level level && !level.isClientSide()
+                    && event.getPlayer() instanceof ServerPlayer player) {
+                SoundMimicry.recordBreak(player, event.getState());
+            }
+        }
+
+        @SubscribeEvent
+        public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+            if (event.getLevel() instanceof Level level && !level.isClientSide()
+                    && event.getEntity() instanceof ServerPlayer player) {
+                SoundMimicry.recordUse(player, level.getBlockState(event.getPos()),
+                        event.getEntity().getItemInHand(event.getHand()));
             }
         }
     }

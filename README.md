@@ -20,8 +20,8 @@ remembers what you've seen and escalates the world accordingly.
 
 ```bash
 ./gradlew :fabric:build :neoforge:build
-# -> fabric/build/libs/smallhours-fabric-1.21.1-0.1.0.jar
-# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.1.0.jar
+# -> fabric/build/libs/smallhours-fabric-1.21.1-0.2.0.jar
+# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.2.0.jar
 ```
 
 Requires JDK 21+ (a registered toolchain or `org.gradle.java.installations.paths` pointing at
@@ -34,8 +34,27 @@ one — ModDevGradle needs a real JDK 21 for its artifact pipeline; compilation 
 ./gradlew :fabric:runServer     # or :neoforge:runServer
 ```
 
-Run dirs are pre-configured (flat world, port 25599, eula accepted). Spawn any of the three
-via their spawn eggs (creative → Spawn Eggs tab) and wait for night.
+Run dirs are pre-configured (flat world, eula accepted; Fabric on port 25599, NeoForge on
+25699 with RCON on 25590 — the two cannot share a port, run one at a time or keep these).
+Spawn any of the three via their spawn eggs (creative → Spawn Eggs tab) and wait for night.
+Note: entity selectors only see loaded chunks — `forceload add` first when testing by RCON.
+
+## Configuration
+
+Both loaders read `config/smallhours.json` (written with defaults on first boot; restart to
+apply):
+
+| Key | Default | Meaning |
+|---|---|---|
+| `enabled` | `true` | master switch — `false` = the mod does nothing on its own |
+| `omen` / `understudy` / `patient` | `true` | per-entity natural-spawn gates (eggs always work) |
+| `skip_first_night` | `true` | spawn-director skips the world's first night |
+| `patient_min_dread` | `60` | dread floor below which the Patient never hunts you |
+| `mimicry` | `true` | the Understudy lures with sounds *you* triggered recently |
+| `cat_ritual` | `true` | waking beside a tamed cat lifts the mark |
+
+Fine-grained numbers (speeds, ranges, budgets, all deltas) stay in
+`common/.../Tuning.java`.
 
 ## Layout
 
