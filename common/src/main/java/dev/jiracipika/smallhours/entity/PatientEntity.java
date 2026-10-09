@@ -7,7 +7,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,6 +39,12 @@ public class PatientEntity extends Monster {
     public PatientEntity(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         this.xpReward = Tuning.PATIENT_XP;
+    }
+
+    /** Its kills don't read as combat: the death line is "X stopped running." */
+    private DamageSource stoppedRunning() {
+        return new DamageSource(this.level().registryAccess()
+                .registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(SmallHours.STOPPED_RUNNING), this, this);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -191,13 +200,13 @@ public class PatientEntity extends Monster {
             ItemStack stolen = target.getMainHandItem().copy();
             target.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
             this.setItemSlot(EquipmentSlot.MAINHAND, stolen);
-            target.hurt(this.damageSources().mobAttack(this), Tuning.PATIENT_STEAL_DAMAGE);
+            target.hurt(stoppedRunning(), Tuning.PATIENT_STEAL_DAMAGE);
             Dread.add(target, "patient_steal", Tuning.PATIENT_STEAL);
             this.stealUsed = true;
             this.playSound(SoundEvents.WARDEN_ATTACK_IMPACT,
                     Tuning.PATIENT_STEAL_SOUND_VOLUME, Tuning.PATIENT_STEAL_SOUND_PITCH);
         } else {
-            target.hurt(this.damageSources().mobAttack(this), Tuning.PATIENT_STRIKE_DAMAGE);
+            target.hurt(stoppedRunning(), Tuning.PATIENT_STRIKE_DAMAGE);
         }
     }
 

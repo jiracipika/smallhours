@@ -53,6 +53,8 @@ public class SmallHoursFabric implements ModInitializer {
         registerSound("understudy_chitter", SmallHours.SND_UNDERSTUDY_CHITTER);
         registerSound("patient_scream", SmallHours.SND_PATIENT_SCREAM);
         registerSound("whisper", SmallHours.SND_WHISPER);
+        Registry.register(BuiltInRegistries.TRIGGER_TYPES, SmallHours.id("it_saw_you_first"),
+                SmallHours.IT_SAW_YOU_FIRST);
 
         FabricDefaultAttributeRegistry.register(omen, OmenEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(understudy, UnderstudyEntity.createAttributes());

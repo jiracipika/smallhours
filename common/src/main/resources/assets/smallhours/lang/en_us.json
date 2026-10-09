@@ -9,5 +9,9 @@
   "subtitles.smallhours.understudy_shriek": "Understudy pounces",
   "subtitles.smallhours.understudy_chitter": "Understudy chitters",
   "subtitles.smallhours.patient_scream": "The Patient screams",
-  "subtitles.smallhours.whisper": "Whispers"
+  "subtitles.smallhours.whisper": "Whispers",
+  "death.attack.smallhours.stopped_running": "%1$s stopped running.",
+  "death.attack.smallhours.stopped_running.player": "%1$s stopped running. %2$s was still there.",
+  "advancement.smallhours.it_saw_you_first.title": "It Saw You First",
+  "advancement.smallhours.it_saw_you_first.desc": "Something on the treeline noticed you before you noticed it."
 }

@@ -229,6 +229,12 @@ public final class Tuning {
     public static final float WHISPER_VOLUME = 0.3F;
     public static final double WHISPER_DISTANCE = 2.5D;
 
+    public static final long CREAK_GAP_MS = 480_000L;
+    public static final int CREAK_BUDGET = 2;
+    public static final double CREAK_RANGE = 24.0D;
+    public static final float CREAK_VOLUME = 1.0F;
+    public static final float CREAK_PITCH = 1.0F;
+
     // ------------------------------------------------------------------
     // Spawning
     // ------------------------------------------------------------------

@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "id": "smallhours:omen_spawn_egg" },
+    "title": { "translate": "advancement.smallhours.it_saw_you_first.title" },
+    "description": { "translate": "advancement.smallhours.it_saw_you_first.desc" },
+    "background": "minecraft:textures/block/crying_obsidian.png",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "it_saw_you": {
+      "trigger": "smallhours:it_saw_you_first"
+    }
+  }
+}

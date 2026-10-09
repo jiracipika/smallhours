@@ -228,6 +228,12 @@ cat-and-bed unmark ritual (wake beside a tamed cat → mark lifted). Also: neofo
 version is now templated from gradle.properties, and the NeoForge dev server moved to port
 25699 so both dev servers can run side by side.
 
-**Roadmap:** door-creak ambient event; Patient LURK phase + mid-night acceleration ramp +
-closing-step relocation; eyes-open skin swap for Phase 3; "It Saw You First" advancement;
-death message "X stopped running."
+**v0.3 (shipped):** the door-creak ambient event (50+: you're roofed, it's night, and a
+*real placed door* within 24 blocks creaks open at full vanilla volume — nothing opens);
+the Patient's kills now use a custom damage type so the death line reads **"X stopped
+running."** (in multiplayer: "X stopped running. Y was still there."); and the hidden
+challenge advancement **"It Saw You First"** — granted the first time the Omen vanishes
+with you as its witness.
+
+**Roadmap:** Patient LURK phase + mid-night acceleration ramp + closing-step relocation;
+eyes-open skin swap for Phase 3.

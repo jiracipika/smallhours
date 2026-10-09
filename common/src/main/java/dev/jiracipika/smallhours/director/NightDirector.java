@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -19,6 +20,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -200,6 +204,26 @@ public final class NightDirector {
             return;
         }
 
+        // Door creak: there IS a real door involved. You're roofed, it's night, and a
+        // placed door within earshot creaks open at full vanilla volume. Nothing opens.
+        if (tier >= 2 && isNight(level) && !level.canSeeSky(p.blockPosition())
+                && now - Dread.timer(p, "amb_creak") >= Tuning.CREAK_GAP_MS) {
+            BlockPos door = findDoorNear(level, p);
+            if (door == null) {
+                // Nothing in earshot — back off 15s so we don't rescan every loop.
+                Dread.setTimer(p, "amb_creak", now - Tuning.CREAK_GAP_MS + 15_000L);
+            } else if (Dread.tryConsumeBudget(p, "creak", Tuning.CREAK_BUDGET)) {
+                Dread.setTimer(p, "amb_any", now);
+                Dread.setTimer(p, "amb_creak", now);
+                BlockState doorState = level.getBlockState(door);
+                SoundEvent creak = doorState.is(Blocks.IRON_DOOR) ? SoundEvents.IRON_DOOR_OPEN
+                        : SoundEvents.WOODEN_DOOR_OPEN;
+                level.playSound(null, door.getX() + 0.5D, door.getY() + 0.5D, door.getZ() + 0.5D,
+                        creak, SoundSource.BLOCKS, Tuning.CREAK_VOLUME, Tuning.CREAK_PITCH);
+                return;
+            }
+        }
+
         if (tier >= 3
                 && now - Dread.timer(p, "amb_whisper") >= Tuning.WHISPER_GAP_MS
                 && Dread.tryConsumeBudget(p, "whisper", Tuning.WHISPER_BUDGET)) {
@@ -287,6 +311,24 @@ public final class NightDirector {
                 }
             }
         }
+    }
+
+    /** Nearest real placed door within CREAK_RANGE horizontally and ±4 vertically. */
+    private static BlockPos findDoorNear(ServerLevel level, ServerPlayer p) {
+        int range = Mth.floor(Tuning.CREAK_RANGE);
+        BlockPos center = p.blockPosition();
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        for (int dy = -4; dy <= 4; dy++) {
+            for (int dx = -range; dx <= range; dx++) {
+                for (int dz = -range; dz <= range; dz++) {
+                    cursor.set(center.getX() + dx, center.getY() + dy, center.getZ() + dz);
+                    if (level.getBlockState(cursor).getBlock() instanceof DoorBlock) {
+                        return cursor.immutable();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private static BlockPos findSpot(ServerLevel level, ServerPlayer player, double minRadius, double maxRadius,

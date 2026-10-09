@@ -10,6 +10,7 @@ import dev.jiracipika.smallhours.entity.OmenEntity;
 import dev.jiracipika.smallhours.entity.PatientEntity;
 import dev.jiracipika.smallhours.entity.UnderstudyEntity;
 import dev.jiracipika.smallhours.mimic.SoundMimicry;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -41,6 +42,10 @@ public final class SmallHoursNeoForge {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, SmallHours.MODID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, SmallHours.MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(SmallHours.MODID);
+    public static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, SmallHours.MODID);
+
+    public static final Supplier<CriterionTrigger<?>> IT_SAW_YOU_FIRST = TRIGGERS.register("it_saw_you_first",
+            () -> SmallHours.IT_SAW_YOU_FIRST);
 
     public static final Supplier<EntityType<OmenEntity>> OMEN = ENTITIES.register("omen",
         () -> EntityType.Builder.of(OmenEntity::new, MobCategory.MONSTER).sized(0.6F, 2.0F).clientTrackingRange(10).build("omen"));
@@ -73,6 +78,7 @@ public final class SmallHoursNeoForge {
         ENTITIES.register(modEventBus);
         SOUNDS.register(modEventBus);
         ITEMS.register(modEventBus);
+        TRIGGERS.register(modEventBus);
     }
 
     @EventBusSubscriber(modid = SmallHours.MODID, bus = EventBusSubscriber.Bus.MOD)

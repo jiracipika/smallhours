@@ -129,6 +129,7 @@ public class OmenEntity extends Monster {
         if (player != null) {
             Dread.add(player, "omen_sighting",
                     reason == VanishReason.CLOSE ? Tuning.OMEN_SIGHTING_CLOSE : Tuning.OMEN_SIGHTING);
+            SmallHours.IT_SAW_YOU_FIRST.trigger(player);
             if (this.stungPlayers.add(player.getUUID())) {
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SmallHours.SND_OMEN_STING,
                         SoundSource.HOSTILE, Tuning.OMEN_STING_VOLUME, 1.0F);

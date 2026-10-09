@@ -20,8 +20,8 @@ remembers what you've seen and escalates the world accordingly.
 
 ```bash
 ./gradlew :fabric:build :neoforge:build
-# -> fabric/build/libs/smallhours-fabric-1.21.1-0.2.0.jar
-# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.2.0.jar
+# -> fabric/build/libs/smallhours-fabric-1.21.1-0.3.0.jar
+# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.3.0.jar
 ```
 
 Requires JDK 21+ (a registered toolchain or `org.gradle.java.installations.paths` pointing at
