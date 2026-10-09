@@ -191,6 +191,30 @@ public final class Tuning {
 
     public static final float PATIENT_SCREAM_VOLUME = 1.0F;
 
+    // LURK: it spawns silent, circles at the edge of your awareness, and only the
+    // scream — when it finally commits — is the hunt's starting gun.
+    public static final int PATIENT_LURK_MIN_TICKS = 100;
+    public static final int PATIENT_LURK_MAX_TICKS = 200;
+    public static final double PATIENT_LURK_RADIUS_MIN = 24.0D;
+    public static final double PATIENT_LURK_RADIUS_MAX = 36.0D;
+    public static final double PATIENT_LURK_COMMIT_RANGE = 14.0D;
+    public static final float PATIENT_LURK_SPEED = 0.8F;
+
+    // Midnight ramp: from PATIENT_MIDNIGHT_TICK onward it stops stalling.
+    public static final int PATIENT_MIDNIGHT_TICK = 18000;
+    public static final float PATIENT_CREEP_SPEED_RAMP = 0.35F;
+    public static final float PATIENT_CREEP_SPEED_MARKED_RAMP = 0.5F;
+    public static final float PATIENT_HUNT_SPEED_RAMP = 1.75F;
+    public static final float PATIENT_HUNT_SPEED_MARKED_RAMP = 2.0F;
+
+    // Closing step: unobserved, still far — it may take one impossible step closer.
+    public static final int PATIENT_CLOSING_INTERVAL_TICKS = 40;
+    public static final float PATIENT_CLOSING_CHANCE = 0.25F;
+    public static final double PATIENT_CLOSING_MIN_DISTANCE = 12.0D;
+    public static final double PATIENT_CLOSING_STEP_MIN = 6.0D;
+    public static final double PATIENT_CLOSING_STEP_MAX = 10.0D;
+    public static final int PATIENT_CLOSING_MAX_LIGHT = 4;
+
     // ------------------------------------------------------------------
     // Night director
     // ------------------------------------------------------------------

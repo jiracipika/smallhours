@@ -258,9 +258,11 @@ def build_understudy():
     return img
 
 
-def build_patient():
+def build_patient(eyes_open=False):
     """The Patient: desaturated grey photo-negative. Shirt #D8D4CC, pants
-    #4A4845, skin #C7C2BA; two 1px closed-eye lines, no open eyes."""
+    #4A4845, skin #C7C2BA; two 1px closed-eye lines, no open eyes.
+    eyes_open=True is the marked-prey variant: 2x3 pale eye whites, pinprick
+    pupils. Same drained palette - the eyes are the only thing awake."""
     rng = random.Random(20261003)
     img = new_skin()
     skin = (0xC7, 0xC2, 0xBA)
@@ -268,6 +270,7 @@ def build_patient():
     pants = (0x4A, 0x48, 0x45)
     hair = (0xB6, 0xB0, 0xA7)
     closed = (0x8A, 0x84, 0x78)
+    open_eye = (0xE8, 0xE4, 0xDC)
 
     fill_unused(img, skin, rng)
     fill_part(img, HEAD, hair, rng, amp=4, skip=("front", "bottom"))
@@ -284,8 +287,14 @@ def build_patient():
 
     # Face: still, colorless, eyes CLOSED - two 1px horizontal lines.
     noise_fill(img, HEAD["front"], skin, rng, amp=4)
-    paint_rect(img, (9, 12, 11, 13), closed)
-    paint_rect(img, (13, 12, 15, 13), closed)
+    if eyes_open:
+        paint_rect(img, (9, 11, 11, 14), open_eye)
+        paint_rect(img, (13, 11, 15, 14), open_eye)
+        paint_rect(img, (10, 13, 11, 14), closed)
+        paint_rect(img, (14, 13, 15, 14), closed)
+    else:
+        paint_rect(img, (9, 12, 11, 13), closed)
+        paint_rect(img, (13, 12, 15, 13), closed)
     return img
 
 
@@ -556,6 +565,10 @@ LANG_JSON = {
     "subtitles.smallhours.understudy_chitter": "Understudy chitters",
     "subtitles.smallhours.patient_scream": "The Patient screams",
     "subtitles.smallhours.whisper": "Whispers",
+    "death.attack.smallhours.stopped_running": "%1$s stopped running.",
+    "death.attack.smallhours.stopped_running.player": "%1$s stopped running. %2$s was still there.",
+    "advancement.smallhours.it_saw_you_first.title": "It Saw You First",
+    "advancement.smallhours.it_saw_you_first.desc": "Something on the treeline noticed you before you noticed it.",
 }
 
 PACK_MCMETA = {"pack": {"description": "Small Hours resources",
@@ -585,6 +598,7 @@ def main():
         "omen": build_omen(),
         "understudy": build_understudy(),
         "patient": build_patient(),
+        "patient_eyes_open": build_patient(eyes_open=True),
     }
     for name, img in skins.items():
         path = os.path.join(TEX_DIR, f"{name}.png")

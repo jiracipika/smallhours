@@ -18,7 +18,9 @@ public class PatientRenderer extends MobRenderer<PatientEntity, HumanoidModel<Pa
 
     @Override
     public ResourceLocation getTextureLocation(PatientEntity entity) {
-        return SmallHours.id("textures/entity/patient.png");
+        return entity.isEyesOpen()
+                ? SmallHours.id("textures/entity/patient_eyes_open.png")
+                : SmallHours.id("textures/entity/patient.png");
     }
 
     @Override

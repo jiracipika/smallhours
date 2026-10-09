@@ -235,5 +235,18 @@ running."** (in multiplayer: "X stopped running. Y was still there."); and the h
 challenge advancement **"It Saw You First"** — granted the first time the Omen vanishes
 with you as its witness.
 
-**Roadmap:** Patient LURK phase + mid-night acceleration ramp + closing-step relocation;
-eyes-open skin swap for Phase 3.
+**v0.4 (shipped):** the Patient's full escalation ladder. **LURK** — on arrival it is
+silent: no scream, no footsteps, no threat heartbeat, just something circling 24–36 blocks
+out, head tracking you. It commits when its patience runs out (5–10s), at **midnight**, or
+the moment you stray within 14 blocks — and *that* is when the scream fires (the hunt's
+starting gun moved here from acquisition). **Midnight ramp** — from tick 18000 the creep
+and hunt speeds both step up (hunt 1.5→1.75; marked 1.8→2.0). **Closing step** — while
+unobserved and 12+ blocks out it may take one ground-true, light-shy (≤4) step of 6–10
+blocks that never lands inside anyone's view cone; a single heavy footstep is the only
+evidence. **Eyes open** — when its current prey is marked, its eyes are open (2×3 pale
+whites, pinprick pupils, `patient_eyes_open.png`); it's synced entity data, so everyone
+sees the eyes — only the marked player knows why.
+
+**Roadmap:** stolen items kept across nights (marked escalation); witness rule
+("did you see that?" "see what?"); the Understudy replaying *chat*; config keys for the
+v0.4 Patient phases.

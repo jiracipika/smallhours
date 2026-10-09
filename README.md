@@ -14,14 +14,16 @@ remembers what you've seen and escalates the world accordingly.
 - **The Understudy** — a child-sized mimic that lures you with sounds you want to trust.
   Its tell: it plays every sound at pitch 1.0, always twice. It's a recording.
 - **The Patient** — the stalker that freeze-mechanics lied about: watching it only slows it
-  from a sprint to a creep. Its first hit takes the item out of your hand.
+  from a sprint to a creep. It lurks first — circling in silence — then screams once and comes.
+  After midnight it stops stalling. Its first hit takes the item out of your hand, and if
+  you're marked, its eyes are open.
 
 ## Building
 
 ```bash
 ./gradlew :fabric:build :neoforge:build
-# -> fabric/build/libs/smallhours-fabric-1.21.1-0.3.0.jar
-# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.3.0.jar
+# -> fabric/build/libs/smallhours-fabric-1.21.1-0.4.0.jar
+# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.4.0.jar
 ```
 
 Requires JDK 21+ (a registered toolchain or `org.gradle.java.installations.paths` pointing at
