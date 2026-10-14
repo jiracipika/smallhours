@@ -247,6 +247,15 @@ evidence. **Eyes open** — when its current prey is marked, its eyes are open (
 whites, pinprick pupils, `patient_eyes_open.png`); it's synced entity data, so everyone
 sees the eyes — only the marked player knows why.
 
-**Roadmap:** stolen items kept across nights (marked escalation); witness rule
-("did you see that?" "see what?"); the Understudy replaying *chat*; config keys for the
-v0.4 Patient phases.
+**v0.5 (shipped — the character bible is now fully implemented):** **memory across
+nights** — the Patient that's still holding your things at dawn stashes them in your dread
+state if you're marked, and the next night's Patient arrives wearing your sword (kill it to
+take them back; die unmarked and the memory dies too). **Witness rule** — when the Omen
+vanishes with a witness, every other eligible player who could see it earns half the
+sighting's dread: "did you see that?" "see what?". **Config** — the Patient phases are now
+server-owner knobs too (`patient_lurk`, `patient_midnight_ramp`, `patient_closing_steps`,
+`patient_eyes`, plus `witness_rule`).
+
+**Roadmap:** the design doc is done. Candidates beyond it: the Understudy replaying
+*chat* (needs a soft-voice TTS or very careful text-to-sound design), Modrinth/CurseForge
+release packaging, and a Mayview modpack slot.

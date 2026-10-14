@@ -31,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 
 import dev.jiracipika.smallhours.SmallHours;
 import dev.jiracipika.smallhours.Tuning;
+import dev.jiracipika.smallhours.config.Config;
 import dev.jiracipika.smallhours.director.NightDirector;
 import dev.jiracipika.smallhours.dread.Dread;
 
@@ -105,6 +106,12 @@ public class PatientEntity extends Monster {
                 ServerPlayer target = playerByUUID(level, this.targetUUID);
                 if (target != null) {
                     Dread.setThreat(target, false);
+                    // Marked prey: what it holds at dawn, it keeps — next night it
+                    // comes back still carrying your things.
+                    ItemStack held = this.getMainHandItem();
+                    if (Dread.isMarked(target) && this.stealUsed && !held.isEmpty()) {
+                        Dread.cacheStolenItem(target, held);
+                    }
                 }
                 this.discard();
             }
@@ -122,7 +129,7 @@ public class PatientEntity extends Monster {
         }
 
         boolean marked = Dread.isMarked(target);
-        this.entityData.set(DATA_EYES_OPEN, marked);
+        this.entityData.set(DATA_EYES_OPEN, marked && Config.patientEyesOpen);
 
         if (this.phase == Phase.LURK) {
             tickLurk(level, target);
@@ -168,7 +175,8 @@ public class PatientEntity extends Monster {
 
     /** Observed = creep, unobserved = hunt; marked and past-midnight both escalate. */
     private float speedFor(boolean marked) {
-        boolean midnight = this.level().getDayTime() % Tuning.DAY_LENGTH_TICKS >= Tuning.PATIENT_MIDNIGHT_TICK;
+        boolean midnight = Config.patientMidnightRamp
+                && this.level().getDayTime() % Tuning.DAY_LENGTH_TICKS >= Tuning.PATIENT_MIDNIGHT_TICK;
         if (this.observed) {
             if (marked) {
                 return midnight ? Tuning.PATIENT_CREEP_SPEED_MARKED_RAMP : Tuning.PATIENT_CREEP_SPEED_MARKED;
@@ -215,7 +223,8 @@ public class PatientEntity extends Monster {
      * A single heavy footstep marks the arrival. Nothing else does.
      */
     private void tryClosingStep(ServerLevel level, ServerPlayer target) {
-        if (this.tickCount % Tuning.PATIENT_CLOSING_INTERVAL_TICKS != 0
+        if (!Config.patientClosingSteps
+                || this.tickCount % Tuning.PATIENT_CLOSING_INTERVAL_TICKS != 0
                 || this.random.nextFloat() >= Tuning.PATIENT_CLOSING_CHANCE
                 || this.distanceTo(target) < Tuning.PATIENT_CLOSING_MIN_DISTANCE) {
             return;
@@ -312,8 +321,12 @@ public class PatientEntity extends Monster {
             }
         }
         if (current != null && this.phase == Phase.LURK && this.lurkUntil < 0) {
-            this.lurkUntil = this.tickCount + Mth.randomBetweenInclusive(this.random,
-                    Tuning.PATIENT_LURK_MIN_TICKS, Tuning.PATIENT_LURK_MAX_TICKS);
+            if (!Config.patientLurk) {
+                enterHunt(current);
+            } else {
+                this.lurkUntil = this.tickCount + Mth.randomBetweenInclusive(this.random,
+                        Tuning.PATIENT_LURK_MIN_TICKS, Tuning.PATIENT_LURK_MAX_TICKS);
+            }
         }
         return current;
     }
@@ -354,6 +367,15 @@ public class PatientEntity extends Monster {
         } else {
             target.hurt(stoppedRunning(), Tuning.PATIENT_STRIKE_DAMAGE);
         }
+    }
+
+    /** Director-side handover: it arrives still holding what it took last night. */
+    public void acceptStolen(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        this.stealUsed = true;
     }
 
     private void faceToward(Entity target) {

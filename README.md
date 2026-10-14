@@ -22,8 +22,8 @@ remembers what you've seen and escalates the world accordingly.
 
 ```bash
 ./gradlew :fabric:build :neoforge:build
-# -> fabric/build/libs/smallhours-fabric-1.21.1-0.4.0.jar
-# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.4.0.jar
+# -> fabric/build/libs/smallhours-fabric-1.21.1-0.5.0.jar
+# -> neoforge/build/libs/smallhours-neoforge-1.21.1-0.5.0.jar
 ```
 
 Requires JDK 21+ (a registered toolchain or `org.gradle.java.installations.paths` pointing at
@@ -54,6 +54,11 @@ apply):
 | `patient_min_dread` | `60` | dread floor below which the Patient never hunts you |
 | `mimicry` | `true` | the Understudy lures with sounds *you* triggered recently |
 | `cat_ritual` | `true` | waking beside a tamed cat lifts the mark |
+| `patient_lurk` | `true` | the Patient circles silently before committing to the hunt |
+| `patient_midnight_ramp` | `true` | its speeds step up after midnight |
+| `patient_closing_steps` | `true` | impossible steps closer while you're not looking |
+| `patient_eyes` | `true` | its eyes open when its prey is marked |
+| `witness_rule` | `true` | shared Omen sightings earn the witness half credit |
 
 Fine-grained numbers (speeds, ranges, budgets, all deltas) stay in
 `common/.../Tuning.java`.

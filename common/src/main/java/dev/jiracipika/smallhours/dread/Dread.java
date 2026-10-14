@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
 
 import dev.jiracipika.smallhours.Tuning;
@@ -190,6 +191,30 @@ public final class Dread {
         player.connection.send(new ClientboundSoundPacket(Holder.direct(sound), SoundSource.NEUTRAL,
                 (int) (player.getX() * 8.0D), (int) (player.getY() * 8.0D), (int) (player.getZ() * 8.0D),
                 0.6F, 1.0F, player.getRandom().nextLong()));
+    }
+
+    /** The Patient stashes what it's still holding at dawn — marked players only. */
+    public static void cacheStolenItem(ServerPlayer player, ItemStack stack) {
+        DreadState.PlayerDread st = state(player);
+        if (st == null || stack.isEmpty()) {
+            return;
+        }
+        st.stolenCache = stack;
+        markDirty(player);
+    }
+
+    /** Handover at next-night spawn: take-and-clear, whatever the mark state. */
+    public static ItemStack takeCachedStolen(ServerPlayer player) {
+        DreadState.PlayerDread st = state(player);
+        if (st == null) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack out = st.stolenCache;
+        st.stolenCache = ItemStack.EMPTY;
+        if (!out.isEmpty()) {
+            markDirty(player);
+        }
+        return out;
     }
 
     public static void onDeath(ServerPlayer player) {

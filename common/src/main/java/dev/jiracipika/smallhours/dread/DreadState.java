@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.SavedData;
 
 public class DreadState extends SavedData {
@@ -27,6 +28,9 @@ public class DreadState extends SavedData {
         public boolean threat;
         public long lastDreadEvent;
         public long lastDecay;
+        // What the Patient took from this player and still holds at dawn — it
+        // remembers, across nights, if you're marked.
+        public ItemStack stolenCache = ItemStack.EMPTY;
     }
 
     public static DreadState get(MinecraftServer server) {
@@ -55,6 +59,9 @@ public class DreadState extends SavedData {
             t.putBoolean("threat", d.threat);
             t.putLong("lastDreadEvent", d.lastDreadEvent);
             t.putLong("lastDecay", d.lastDecay);
+            if (!d.stolenCache.isEmpty()) {
+                t.put("stolen", d.stolenCache.save(registries));
+            }
             list.add(t);
         }
         tag.put("players", list);
@@ -80,6 +87,9 @@ public class DreadState extends SavedData {
             d.threat = t.getBoolean("threat");
             d.lastDreadEvent = t.getLong("lastDreadEvent");
             d.lastDecay = t.getLong("lastDecay");
+            if (t.contains("stolen")) {
+                d.stolenCache = ItemStack.parse(registries, t.get("stolen")).orElse(ItemStack.EMPTY);
+            }
             state.players.put(t.getUUID("uuid"), d);
         }
         return state;

@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -304,6 +305,10 @@ public final class NightDirector {
                     PatientEntity e = SmallHours.PATIENT.get().create(level);
                     if (e != null) {
                         e.setTargetPlayer(p.getUUID());
+                        ItemStack remembered = Dread.takeCachedStolen(p);
+                        if (Dread.isMarked(p)) {
+                            e.acceptStolen(remembered);
+                        }
                         e.moveTo(spot.getX() + 0.5D, spot.getY(), spot.getZ() + 0.5D, rng.nextFloat() * 360.0F, 0.0F);
                         level.addFreshEntity(e);
                         Dread.setThreat(p, true);

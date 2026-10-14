@@ -26,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 
 import dev.jiracipika.smallhours.SmallHours;
 import dev.jiracipika.smallhours.Tuning;
+import dev.jiracipika.smallhours.config.Config;
 import dev.jiracipika.smallhours.director.NightDirector;
 import dev.jiracipika.smallhours.dread.Dread;
 
@@ -130,6 +131,18 @@ public class OmenEntity extends Monster {
             Dread.add(player, "omen_sighting",
                     reason == VanishReason.CLOSE ? Tuning.OMEN_SIGHTING_CLOSE : Tuning.OMEN_SIGHTING);
             SmallHours.IT_SAW_YOU_FIRST.trigger(player);
+            // Witness rule: seeing it together earns the witness half credit.
+            if (Config.witnessRule) {
+                for (Player wp : this.level().players()) {
+                    if (!(wp instanceof ServerPlayer w) || w == player || !NightDirector.eligible(w)
+                            || this.distanceToSqr(w) > Tuning.OMEN_STARE_RANGE * Tuning.OMEN_STARE_RANGE
+                            || !w.hasLineOfSight(this)) {
+                        continue;
+                    }
+                    Dread.add(w, "omen_sighting_witness",
+                            (reason == VanishReason.CLOSE ? Tuning.OMEN_SIGHTING_CLOSE : Tuning.OMEN_SIGHTING) / 2);
+                }
+            }
             if (this.stungPlayers.add(player.getUUID())) {
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SmallHours.SND_OMEN_STING,
                         SoundSource.HOSTILE, Tuning.OMEN_STING_VOLUME, 1.0F);

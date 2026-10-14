@@ -39,6 +39,13 @@ public final class Config {
     public static volatile boolean mimicryEnabled = true;
     // Waking up near a tamed cat lifts the mark.
     public static volatile boolean catRitualEnabled = true;
+    // Patient phases.
+    public static volatile boolean patientLurk = true;
+    public static volatile boolean patientMidnightRamp = true;
+    public static volatile boolean patientClosingSteps = true;
+    public static volatile boolean patientEyesOpen = true;
+    // Shared sightings earn the witness half credit.
+    public static volatile boolean witnessRule = true;
 
     private static Path dir;
 
@@ -64,6 +71,11 @@ public final class Config {
                 patientMinDread = getInt(json, "patient_min_dread", patientMinDread);
                 mimicryEnabled = getBool(json, "mimicry", mimicryEnabled);
                 catRitualEnabled = getBool(json, "cat_ritual", catRitualEnabled);
+                patientLurk = getBool(json, "patient_lurk", patientLurk);
+                patientMidnightRamp = getBool(json, "patient_midnight_ramp", patientMidnightRamp);
+                patientClosingSteps = getBool(json, "patient_closing_steps", patientClosingSteps);
+                patientEyesOpen = getBool(json, "patient_eyes", patientEyesOpen);
+                witnessRule = getBool(json, "witness_rule", witnessRule);
                 SmallHours.LOG.info("Small Hours config loaded from {}", file);
             } else {
                 SmallHours.LOG.info("Small Hours config not found; writing defaults to {}", file);
@@ -88,6 +100,11 @@ public final class Config {
         json.addProperty("patient_min_dread", patientMinDread);
         json.addProperty("mimicry", mimicryEnabled);
         json.addProperty("cat_ritual", catRitualEnabled);
+        json.addProperty("patient_lurk", patientLurk);
+        json.addProperty("patient_midnight_ramp", patientMidnightRamp);
+        json.addProperty("patient_closing_steps", patientClosingSteps);
+        json.addProperty("patient_eyes", patientEyesOpen);
+        json.addProperty("witness_rule", witnessRule);
         try {
             Files.createDirectories(dir);
             Files.writeString(dir.resolve(FILE_NAME), GSON.toJson(json), StandardCharsets.UTF_8);
