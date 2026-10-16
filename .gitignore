@@ -1,13 +1,17 @@
 .gradle/
 build/
 out/
-# Dev run dirs: ignore everything except the seed config a fresh clone needs.
-run/**
-!run/eula.txt
-!run/server.properties
 runs/
 logs/
 *.iml
 .idea/
 .vscode/
 .DS_Store
+
+# Dev run dirs: ignore everything except the seed config a fresh clone needs.
+fabric/run/*
+!fabric/run/eula.txt
+!fabric/run/server.properties
+neoforge/run/*
+!neoforge/run/eula.txt
+!neoforge/run/server.properties
