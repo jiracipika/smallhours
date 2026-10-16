@@ -1,7 +1,10 @@
 .gradle/
 build/
 out/
-run/
+# Dev run dirs: ignore everything except the seed config a fresh clone needs.
+run/**
+!run/eula.txt
+!run/server.properties
 runs/
 logs/
 *.iml
